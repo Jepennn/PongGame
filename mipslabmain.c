@@ -48,26 +48,27 @@ int main(void) {
 	/* SPI2STAT bit SPIROV = 0; */
 	SPI2STATCLR = 0x40;
 	/* SPI2CON bit CKP = 1; */
-        SPI2CONSET = 0x40;
+    SPI2CONSET = 0x40;
 	/* SPI2CON bit MSTEN = 1; */
 	SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
 	
-	display_init();
-	display_string(0, "KTH/ICT lab");
-	display_string(1, "in Computer");
-	display_string(2, "Engineering");
-	display_string(3, "Welcome!");
-	display_update();
-	
-	display_image(96, icon);
-	
-	labinit(); /* Do any lab-specific initialization */
 
-	while( 1 )
+	/*Initialiserar allt som behövs för projektet */
+	labinit(); 
+
+	int dection = show_menu();
+
+	while(1)
 	{
-	  labwork(); /* Do lab-specific things again and again */
+	if(dection == 1)
+	{
+		clear_screen();
+		show_highscore();
+	}
+	else if(dection == 2)
+	  	labwork(); /* Do lab-specific things again and again */
 	}
 	return 0;
 }

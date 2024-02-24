@@ -20,7 +20,7 @@ int countled = 0;
 
 int timeoutcount = 0; //counts antalet gånger som timeout inträffat
 
-char textstring[] = "text, more text, and even more text!";
+//char textstring[] = "text, more text, and even more text!";
 
 /* Interrupt Service Routine */
 void user_isr( void )
@@ -30,20 +30,21 @@ void user_isr( void )
     timeoutcount++;
     IFSCLR(0) = 0x100;    //Nollställer timer flaggan
 
-    if(timeoutcount == 10)  //Om timeoutcount är 10, dvs 1s, så uppdateras tiden och skrivs ut.(Klockan fungerar som den ska)
+    /*if(timeoutcount == 10)  //Om timeoutcount är 10, dvs 1s, så uppdateras tiden och skrivs ut.(Klockan fungerar som den ska)
     {
       time2string( textstring, mytime );
       display_string( 3, textstring );
       display_update();
       tick(&mytime);
-      timeoutcount = 0;
-    }
+     timeoutcount = 0;
+    }*/
   }
 }
 
 /* Lab-specific initialization goes here */
 void labinit( void )
 {
+  display_init();  //Initierar displayen
   //volatile int *pTrisE = (volatile int*) 0xbf886100;  // Sätter uppe en pekare till TRISE, där leds finns.
   //*pTrisE = *pTrisE & 0xFF00;                         //Sätter dem 8 minsta bitarna till noll --> leds är output//
   //TRISDSET = 0x0FE0;                                 // Sätter bit 5 till 11 = 1 --> knappar är input.
@@ -55,19 +56,20 @@ void labinit( void )
   PR2 = 31250;          //Sätter perioden till 0.1s
 
   //Sätter upp interrupt för timer2
-  IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
+  /*IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
   IPCSET(2) = 0x1f;      //Sätter prioritet och subprioritet till 7
   
   T2CONSET = 0x8000;    //Startar timer 2
 
-  enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)
+  enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)*/
 }
 
 /* This function is called repetitively from the main program */
 void labwork( void )
 {
-  prime = nextprime( prime );
-  display_string( 0, itoaconv( prime ) );
-  display_update();
+  //prime = nextprime( prime );
+  //display_string( 0, itoaconv( prime ) );
+  //display_update();
+  display_image(0, single_map);
 }
   

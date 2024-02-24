@@ -38,7 +38,9 @@ void display_debug( volatile int * const addr );
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
-extern const uint8_t const icon[128];
+extern const uint8_t const icon[512];
+extern const uint8_t const single_map[512];
+extern const uint8_t const c_screen[512];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
 
@@ -53,3 +55,10 @@ void time2string( char *, int );
 int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
+
+/* Declare display functions written by students */
+
+//Funktioner bygggda för att visa menyer
+int show_menu(void);
+void clear_screen(void);
+void show_game_over(void);

@@ -1,0 +1,29 @@
+Projektplan. 
+
+Bygga spelet pong.
+
+Vad behöver fixas?
+
+1. Gör menyn. Vad ska finnas? 
+- 2 val: 
+Play game:
+Highscore: 
+
+
+1. En spelplan med brackets behöver printas upp.
+2. Interuppts/timers som gör det möjligt att flytta att flytta bracket upp och ner med BTN 1 OCH BTN 4
+
+
+
+
+
+#################################################################
+
+INFORMATION:
+
+- Display består av:
+4 pages, som består av 128 colummner och 8 rows vardera.
+skärmen visas genom upp och ner från 
+
+Visa flera objekt på skärmen samtidigt görs genom att ha en array för varje objekt. 
+Sedan kan man OR eller AND dem för att få sin slutgiltiga Display.

@@ -155,8 +155,8 @@ void display_image(int x, const uint8_t *data) {
 		
 		DISPLAY_CHANGE_TO_DATA_MODE;
 		
-		for(j = 0; j < 32; j++)
-			spi_send_recv(~data[i*32 + j]);
+		for(j = 0; j < 128; j++)
+			spi_send_recv(data[i*128 + j]); // add (~) för att 0:or som på och 1:or som av.
 	}
 }
 
@@ -321,4 +321,45 @@ char * itoaconv( int num )
   /* Since the loop always sets the index i to the next empty position,
    * we must add 1 in order to return a pointer to the first occupied position. */
   return( &itoa_buffer[ i + 1 ] );
+}
+
+int show_menu(void)
+{
+  //Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
+    display_string(0, "			PONG-GAME!		");
+    display_string(1, "1.Play PONG");
+    display_string(2, "2.Highscore");
+    display_string(3, "Chose with switch");
+    display_update();
+    while(1)
+    {
+      int swtch = getsw();
+
+      if(swtch == 1)
+      {
+        return 1;
+      }
+      else if(swtch == 2)
+      {
+        return 2;
+      }
+    }
+}
+
+//Rensar skärmen tom för att göra den redo at visa en ny bild.
+void clear_screen(void)
+{
+  display_image(0, c_screen);
+}
+
+void show_highscore(void)
+{
+  //Hardkodad highscore ska konfigureras senare
+  while(1){
+  display_string(0, "HIGHSCORES:");
+  display_string(1, "1: 100");
+  display_string(2, "2: 90");
+  display_string(3, "3: 80");
+  display_update();
+  }
 }
