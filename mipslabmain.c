@@ -59,7 +59,6 @@ int main(void) {
 	proj_init(); 
 
 	int val = show_menu();
-
 	while(1)
 	{
 		switch (val)

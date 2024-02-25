@@ -14,21 +14,24 @@
 #include "pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
-int prime = 1234567;
+bracket my_bracket = {1, 12, 8}; // x-position, y-position, height
+ball ball1 = {74, 16, 1, 1};       // x-position, y-position, x-velocity, y-velocity
+
+// Skapa en instans av bracket
 int mytime = 0x5957;
 int countled = 0;
 
-int timeoutcount = 0; //counts antalet gånger som timeout inträffat
-
-//char textstring[] = "text, more text, and even more text!";
 
 /* Interrupt Service Routine */
 void user_isr( void )
 {
   if(IFS(0) & 0x100)  //Kontrollerar om timer flaggan är satt. Ett icke nollvärde anses vara sant i C.
   {
-    timeoutcount++;
     IFSCLR(0) = 0x100;    //Nollställer timer flaggan
+    int direction = getbtns();
+    move_bracket(&my_bracket, direction, single_map);
+
+
 
     /*if(timeoutcount == 10)  //Om timeoutcount är 10, dvs 1s, så uppdateras tiden och skrivs ut.(Klockan fungerar som den ska)
     {
@@ -50,15 +53,17 @@ void proj_init( void )
   TRISFSET = 0x2; 
   TRISDSET = 0xe0;
 
+
+  // Initialisera spelet här...
+
   //Initierar displayen
   display_init();  
 
-
   //Sätter upp min timer, prescaler 256 (31250 cykler), tid 0.1s, 
   T2CONCLR = 0x0;       //Resetar timer 2
-  T2CON = 0x70;          //Prescaler 1:256
+  T2CON = 0x70;         //Prescaler 1:256
   TMR2 = 0x0;           //Nollställer räknaren
-  PR2 = 31250;          //Sätter perioden till 0.1s
+  PR2 = 15625;          /*Sätter perioden till 0.05s, vilket ger en frekvens på 20 Hz (Korrigeras för bracketens velocity senare)*/
 
   //Sätter upp interrupt för timer2
   IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
@@ -69,9 +74,13 @@ void proj_init( void )
   enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)
 }
 
-/* This function is called repetitively from the main program */
+
+/* Gameplaying function*/
 void labwork( void )
 {
-  add_objects_to_screen(&ball, &single_map, &bracket);
+  draw_bracket(my_bracket, single_map);
+  draw_ball(ball1, single_map);
+  move_ball(&ball1, single_map);
+  display_image(0, single_map);
 }
   

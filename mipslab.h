@@ -39,8 +39,8 @@ void display_debug( volatile int * const addr );
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
 extern uint8_t single_map[512];
-extern uint8_t ball[512];
-extern uint8_t bracket[512];
+//extern uint8_t ball[512];
+//extern uint8_t bracket[512];
 extern const uint8_t const clr_screen[512];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
@@ -63,3 +63,23 @@ void enable_interrupt(void);
 int show_menu(void);
 void clear_screen(void);
 void show_game_over(void);
+
+
+/*Objekt som används i spelet (Bollen, racketen och kartan)
+  skapar ett en typedef struct för att bara behöva använda 
+  bracket och ball*/
+typedef struct
+{
+  int x;
+  int y;
+  int y_height;
+} bracket;
+
+typedef struct
+{
+  int x;
+  int y;
+  int x_speed;
+  int y_speed;
+} ball;
+

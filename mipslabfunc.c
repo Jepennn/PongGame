@@ -370,7 +370,7 @@ void show_highscore(void)
 }
 
 //Addding objects to the screen (ball[] + single_map[] + bracket[])
-void add_objects_to_screen(uint8_t *a, uint8_t *b, uint8_t *c)
+/*void add_objects_to_screen(uint8_t *a, uint8_t *b, uint8_t *c)
 {
   uint8_t screen[512];
   int i;
@@ -378,4 +378,111 @@ void add_objects_to_screen(uint8_t *a, uint8_t *b, uint8_t *c)
     screen[i] = a[i] | b[i] | c[i];
   }
   display_image(0, screen);
+}*/
+
+
+ 
+/*Funktion för att rita en pixel på skärmen från vårt kordinatsystem 
+till arrayen som skärmen använder.*/
+void draw_pixel(int x, int y, uint8_t* map, int value) 
+{
+  int page = y / 8;
+  int pixel = y % 8;
+  int index = page * 128 + x;
+  if(value == 1)
+  {
+    map[index] |= 1 << pixel;
+  }
+  else
+  {
+    map[index] &= ~(1 << pixel);
+  }
 }
+
+/*Funktioner för att hantera bracketen*/
+
+//Rita ut bracketen på skärmen
+ void draw_bracket(bracket br, uint8_t* map)
+  {
+  int i;
+  for(i = 0; i < br.y_height; i++)
+  {
+    draw_pixel(br.x, br.y + i, map, 1);
+  }
+  }
+
+
+void move_bracket(bracket *br, int direction, uint8_t* map)
+{
+  if(direction == 4) //Flytta bracketen nedåt(BTN3)
+  {
+    if((br->y + br->y_height) < 32)
+    {
+      // Släck den översta pixeln
+      draw_pixel(br->x, br->y, map, 0);
+      // Tänd den nedersta pixeln
+      draw_pixel(br->x, br->y + br->y_height, map, 1);
+      // Uppdatera y-koordinaten
+      br->y += 1;
+    }
+  }
+  else if(direction == 8) //Flytta bracketen uppåt(BTN4)
+  {
+    if(br->y > 0)
+    {
+      // Släck den nedersta pixeln
+      draw_pixel(br->x, br->y + br->y_height - 1, map, 0);
+      // Tänd den översta pixeln
+      draw_pixel(br->x, br->y - 1, map, 1);
+      // Uppdatera y-koordinaten
+      br->y -= 1;
+    }
+  }
+}
+
+/*Funktioner för att hantera bollen*/
+
+
+//Rita ut bollen på skärmen
+void draw_ball(ball b, uint8_t* map)
+{
+  draw_pixel(b.x, b.y, map, 1);
+}
+
+//Flytta bollen på skärmen
+void move_ball(ball *b, uint8_t* map)
+{
+  static int counter = 0;    /*Räknare för att flytta bollen långsammare*/
+  static int points = 0;     /*Räknare för poäng*/
+
+  if (counter == 0) {
+
+    // Radera nuvarande position
+    draw_pixel(b->x, b->y, map, 0);
+
+    //Uppdatera position
+    b->x += b->x_speed;
+    b->y += b->y_speed;
+
+    // Kontrollera kollision med kanterna
+    if(b->x <= 0 || b->x >= 127)
+    {
+      b->x_speed *= -1;
+    }
+    if(b->y <= 0 || b->y >= 31)
+    {
+      b->y_speed *= -1;
+    }
+
+    // Rita bollen på sin nya position
+    draw_pixel(b->x, b->y, map, 1);
+
+    counter = 15; // Bollen kommer att flyttas en gång var 10:e gång move_ball kallas
+  } else {
+    counter--;
+  }
+}
+
+  
+
+
