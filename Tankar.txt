@@ -1,13 +1,18 @@
 Projektplan. 
 
-Bygga spelet pong.
-
 Vad behöver fixas?
 
-1. Gör menyn. Vad ska finnas? 
-- 2 val: 
+1.MENU (Två alt som väljs mha av switchar) 
 Play game:
+Funktion som ska köra spelet. 
+
 Highscore: 
+Funktion som ska visa dem 3 högsta highscooren. ()
+
+
+
+
+ 
 
 
 1. En spelplan med brackets behöver printas upp.
@@ -22,8 +27,7 @@ Highscore:
 INFORMATION:
 
 - Display består av:
-4 pages, som består av 128 colummner och 8 rows vardera.
-skärmen visas genom upp och ner från 
+4 pages, som består av 128 colummner och 8 rows vardera. 
 
 Visa flera objekt på skärmen samtidigt görs genom att ha en array för varje objekt. 
 Sedan kan man OR eller AND dem för att få sin slutgiltiga Display.

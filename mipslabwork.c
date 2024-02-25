@@ -41,14 +41,19 @@ void user_isr( void )
   }
 }
 
-/* Lab-specific initialization goes here */
-void labinit( void )
+/* Project initialization goes here */
+void proj_init( void )
 {
-  display_init();  //Initierar displayen
-  //volatile int *pTrisE = (volatile int*) 0xbf886100;  // Sätter uppe en pekare till TRISE, där leds finns.
-  //*pTrisE = *pTrisE & 0xFF00;                         //Sätter dem 8 minsta bitarna till noll --> leds är output//
-  //TRISDSET = 0x0FE0;                                 // Sätter bit 5 till 11 = 1 --> knappar är input.
-  
+  //Sätter upp switchar och knappar till input
+  TRISDSET = 0xf00;
+
+  TRISFSET = 0x2; 
+  TRISDSET = 0xe0;
+
+  //Initierar displayen
+  display_init();  
+
+
   //Sätter upp min timer, prescaler 256 (31250 cykler), tid 0.1s, 
   T2CONCLR = 0x0;       //Resetar timer 2
   T2CON = 0x70;          //Prescaler 1:256
@@ -56,20 +61,17 @@ void labinit( void )
   PR2 = 31250;          //Sätter perioden till 0.1s
 
   //Sätter upp interrupt för timer2
-  /*IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
+  IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
   IPCSET(2) = 0x1f;      //Sätter prioritet och subprioritet till 7
   
   T2CONSET = 0x8000;    //Startar timer 2
 
-  enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)*/
+  enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)
 }
 
 /* This function is called repetitively from the main program */
 void labwork( void )
 {
-  //prime = nextprime( prime );
-  //display_string( 0, itoaconv( prime ) );
-  //display_update();
-  display_image(0, single_map);
+  add_objects_to_screen(&ball, &single_map, &bracket);
 }
   

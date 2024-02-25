@@ -56,19 +56,24 @@ int main(void) {
 	
 
 	/*Initialiserar allt som behövs för projektet */
-	labinit(); 
+	proj_init(); 
 
-	int dection = show_menu();
+	int val = show_menu();
 
 	while(1)
 	{
-	if(dection == 1)
-	{
-		clear_screen();
-		show_highscore();
-	}
-	else if(dection == 2)
-	  	labwork(); /* Do lab-specific things again and again */
+		switch (val)
+		{
+		case 1: 					//Play singel-mode
+			labwork(); 		
+			break;
+		case 2: 					//Play multi-mode
+			labwork(); 		
+			break;
+		case 3:						//Show highscore
+			clear_screen();
+			show_highscore();
+		}
 	}
 	return 0;
 }

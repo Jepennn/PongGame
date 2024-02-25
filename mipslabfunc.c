@@ -327,21 +327,25 @@ int show_menu(void)
 {
   //Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
     display_string(0, "			PONG-GAME!		");
-    display_string(1, "1.Play PONG");
-    display_string(2, "2.Highscore");
-    display_string(3, "Chose with switch");
+    display_string(1, "1.Singleplayer");
+    display_string(2, "2.Multiplayer");
+    display_string(3, "3.Highscore");
     display_update();
     while(1)
     {
-      int swtch = getsw();
+      int choice = getbtns();
 
-      if(swtch == 1)
+      if(choice == 1)
       {
         return 1;
       }
-      else if(swtch == 2)
+      else if(choice == 2)
       {
         return 2;
+      }
+      else if(choice == 4)
+      {
+        return 3;
       }
     }
 }
@@ -349,17 +353,29 @@ int show_menu(void)
 //Rensar skärmen tom för att göra den redo at visa en ny bild.
 void clear_screen(void)
 {
-  display_image(0, c_screen);
+  display_image(0, clr_screen);
 }
 
+//Hardkodad highscore ska konfigureras senare
 void show_highscore(void)
 {
-  //Hardkodad highscore ska konfigureras senare
+  char h[] = "HIGHSCORES";  // verkar fungera
   while(1){
-  display_string(0, "HIGHSCORES:");
+  display_string(0, h);
   display_string(1, "1: 100");
   display_string(2, "2: 90");
   display_string(3, "3: 80");
   display_update();
   }
+}
+
+//Addding objects to the screen (ball[] + single_map[] + bracket[])
+void add_objects_to_screen(uint8_t *a, uint8_t *b, uint8_t *c)
+{
+  uint8_t screen[512];
+  int i;
+  for(i = 0; i < 512; i++) {
+    screen[i] = a[i] | b[i] | c[i];
+  }
+  display_image(0, screen);
 }
