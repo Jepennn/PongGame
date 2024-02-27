@@ -53,7 +53,11 @@ int main(void) {
 	SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
-	
+
+	//Highscore list
+	char place1[10];	
+	char place2[10];
+	char place3[10];
 
 	/*Initialiserar allt som behövs för projektet */
 	proj_init(); 
@@ -63,15 +67,16 @@ int main(void) {
 	{
 		switch (val)
 		{
-		case 1: 					//Play singel-mode
+		case 1: 					//Play game
 			labwork(); 		
 			break;
-		case 2: 					//Play multi-mode
-			labwork(); 		
-			break;
-		case 3:						//Show highscore
+		case 2:						//show highscore
 			clear_screen();
-			show_highscore();
+			show_highscore();								
+			break;
+		case 3:
+			labwork(); 				//Show credits
+
 		}
 	}
 	return 0;

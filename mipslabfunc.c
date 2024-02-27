@@ -328,8 +328,8 @@ int show_menu(void)
   //Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
     display_string(0, "			PONG-GAME!		");
     display_string(1, "1.Singleplayer");
-    display_string(2, "2.Multiplayer");
-    display_string(3, "3.Highscore");
+    display_string(2, "2.Highscore");
+    display_string(3, "3.CREDITS");
     display_update();
     while(1)
     {
@@ -353,7 +353,12 @@ int show_menu(void)
 //Rensar skärmen tom för att göra den redo at visa en ny bild.
 void clear_screen(void)
 {
+  display_string(0, " ");
+  display_string(1, " ");
+  display_string(2, " ");
+  display_string(3, " ");
   display_image(0, clr_screen);
+  display_update();
 }
 
 //Hardkodad highscore ska konfigureras senare
@@ -369,20 +374,8 @@ void show_highscore(void)
   }
 }
 
-//Addding objects to the screen (ball[] + single_map[] + bracket[])
-/*void add_objects_to_screen(uint8_t *a, uint8_t *b, uint8_t *c)
-{
-  uint8_t screen[512];
-  int i;
-  for(i = 0; i < 512; i++) {
-    screen[i] = a[i] | b[i] | c[i];
-  }
-  display_image(0, screen);
-}*/
-
-
  
-/*Funktion för att rita en pixel på skärmen från vårt kordinatsystem 
+/*Funktion för att rita en pixel på skärmen från vårt 2D kordinatsystem 
 till arrayen som skärmen använder.*/
 void draw_pixel(int x, int y, uint8_t* map, int value) 
 {
@@ -461,17 +454,29 @@ void move_ball(ball *b, uint8_t* map)
     draw_pixel(b->x, b->y, map, 0);
 
     //Uppdatera position
-    b->x += b->x_speed;
-    b->y += b->y_speed;
+    b->x += b->x_speed;               //Flytta bollen i x-led
+    b->y += b->y_speed;               //Flytta bollen i y-led
+
+    //Kontrollera om bracket missar bollen
+    if(b->x == 0)
+    {
+      
+      clear_screen();
+      display_string(1, "    GAME OVER  ");
+      display_string(3, "Score: 10" );
+      display_update();
+      delay(1000000);
+    }
 
     // Kontrollera kollision med kanterna
-    if(b->x <= 0 || b->x >= 127)
+    if(is_pixel_on(b->x, b->y, map) || b->x >= 127)
     {
-      b->x_speed *= -1;
+      b->x_speed *= -1;                 //Byt riktning i x-led om bollen kolliderar med kanterna. (x_speed = -x_speed)
+      points++;
     }
     if(b->y <= 0 || b->y >= 31)
     {
-      b->y_speed *= -1;
+      b->y_speed *= -1;                 //Byt riktning i y-led om bollen kolliderar med kanterna. (y_speed = -y_speed)
     }
 
     // Rita bollen på sin nya position
@@ -482,6 +487,25 @@ void move_ball(ball *b, uint8_t* map)
     counter--;
   }
 }
+
+
+
+
+/*Kontrollera om en pixel är tänd eller släkt kan användas 
+för att kolla om bollen kolliderar med bracketen.*/
+int is_pixel_on(int x, int y, uint8_t map[]) 
+{
+  int page = y / 8;
+  int pixel = y % 8;
+  int index = page * 128 + x;
+
+  if(map[index] && 0x1)
+    return 1;
+  else
+    return 0;
+
+}
+
 
   
 

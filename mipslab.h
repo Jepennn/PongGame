@@ -39,11 +39,14 @@ void display_debug( volatile int * const addr );
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
 extern uint8_t single_map[512];
-//extern uint8_t ball[512];
-//extern uint8_t bracket[512];
 extern const uint8_t const clr_screen[512];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
+
+//Arrays for highscore
+extern char place1[10];	
+extern char place2[10];
+extern char place3[10];
 
 /* Declare functions written by students.
    Note: Since we declare these functions here,
@@ -79,7 +82,7 @@ typedef struct
 {
   int x;
   int y;
-  int x_speed;
+  int x_speed; 
   int y_speed;
 } ball;
 
