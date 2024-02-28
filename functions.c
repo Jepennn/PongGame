@@ -4,6 +4,7 @@
 
    For copyright and licensing, see file COPYING */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
@@ -444,12 +445,19 @@ void draw_ball(ball b, uint8_t* map)
   draw_pixel(b.x, b.y, map, 1);
 }
 
+/*#######################################################################################*/
+//Här kommeer lite globala variabler som används i spelet
+
+int points = 0;                         //Räknare för poäng
+char score[5];                          //String som vår omvandling av points placeras i
+char *score_pointer = score;            //Pekare till score
+
 //Flytta bollen på skärmen
 void move_ball(ball *b, uint8_t* map)
 {
   static int counter = 0;     //Räknare för att flytta bollen långsammare
-  static int points = 0;     //Räknare för poäng
-  char score[10];            //String som vår omvandling av points placeras i
+  //static int points = 0;     //Räknare för poäng
+  //char score[5];            //String som vår omvandling av points placeras i
 
   if (counter == 0) {
 
@@ -469,8 +477,14 @@ void move_ball(ball *b, uint8_t* map)
     // Kontrollera kollision med kanterna
     if(is_pixel_on(b->x, b->y, map) || b->x >= 127)
     {
+      if(is_pixel_on(b->x, b->y, map))
+      {
+        points++;                       //Lägg till 10 poäng om bollen kolliderar med bracketen
+        //countled = 1;                   //Sätt countled till 1 för att lysa upp LED
+        PORTE = points;                 //Visa poängen på LED
+      } 
+
       b->x_speed *= -1;                 //Byt riktning i x-led om bollen kolliderar med kanterna. (x_speed = -x_speed)
-      points++;
     }
     if(b->y <= 0 || b->y >= 31)
     {
@@ -506,8 +520,9 @@ int is_pixel_on(int x, int y, uint8_t map[])
 void game_over(void)
 {
   clear_screen();
+  score_pointer = itoaconv(points);
   display_string(1, "    GAME OVER  ");
-  display_string(3, "Score: 10" );
+  display_string(3, score_pointer);
   display_update();
   delay(4000);
   reset_game();
@@ -528,6 +543,9 @@ void reset_game(void)
   ball1.y = 16;
   ball1.x_speed = 1;
   ball1.y_speed = 1;
+
+  points = 0;
+  PORTE = 0;
 }
 
 
@@ -555,6 +573,8 @@ void game_play(void)
 		}
 	}
 }
+
+
 
   
 

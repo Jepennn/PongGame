@@ -64,7 +64,6 @@ int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
 
-/* Declare display functions written by students */
 
 //Funktioner bygggda för att visa menyer
 int show_menu(void);
@@ -77,10 +76,7 @@ void reset_game(void);
 void game_play(void);
 
 
-
-/*Objekt som används i spelet (Bollen, racketen och kartan)
-  skapar ett en typedef struct för att bara behöva använda 
-  bracket och ball när ett objekt initsieras*/
+/*Objekt som används i spelet PONG*/
 typedef struct
 {
   int x;

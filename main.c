@@ -63,6 +63,7 @@ int main(void) {
 	proj_init(); 
 
 	//Startar spelet
-	game_play();	
+	game_play();
+		
 	return 0;
 }

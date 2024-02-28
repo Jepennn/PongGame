@@ -40,6 +40,9 @@ void proj_init( void )
   TRISFSET = 0x2; 
   TRISDSET = 0xe0;
 
+  //Sätter upp LED till output
+  TRISECLR = 0xff;
+
   //Initierar displayen
   display_init(); 
 
