@@ -21,25 +21,14 @@ bracket my_bracket = {1, 12, 8};    // x-position, y-position, height
 int countled = 0;
 
 
-/* Interrupt Service Routine */
+/* Interrupt Service Routine */ 
 void user_isr( void )
 {
   if(IFS(0) & 0x100)  //Kontrollerar om timer flaggan är satt. Ett icke nollvärde anses vara sant i C.
   {
-    IFSCLR(0) = 0x100;    //Nollställer timer flaggan
+    IFSCLR(0) = 0x100;          //Nollställer timer flaggan
     int direction = getbtns();
     move_bracket(&my_bracket, direction, single_map);
-
-
-
-    /*if(timeoutcount == 10)  //Om timeoutcount är 10, dvs 1s, så uppdateras tiden och skrivs ut.(Klockan fungerar som den ska)
-    {
-      time2string( textstring, mytime );
-      display_string( 3, textstring );
-      display_update();
-      tick(&mytime);
-     timeoutcount = 0;
-    }*/
   }
 }
 
@@ -59,18 +48,18 @@ void proj_init( void )
 	delay(6000); 
 
   //Sätter upp min timer, prescaler 256 (15625 cykler), tid 0.05s, 
-  T2CONCLR = 0x0;       //Resetar timer 2
-  T2CON = 0x70;         //Prescaler 1:256
-  TMR2 = 0x0;           //Nollställer räknaren
-  PR2 = 15625;          /*Sätter perioden till 0.05s, vilket ger en frekvens på 20 Hz (Korrigeras för bracketens velocity senare)*/
+  T2CONCLR = 0x0;           //Resetar timer 2
+  T2CON = 0x70;             //Prescaler 1:256
+  TMR2 = 0x0;               //Nollställer räknaren
+  PR2 = 15625;              /*Sätter perioden till 0.05s, vilket ger en frekvens på 20 Hz (Korrigeras för bracketens velocity senare)*/
 
   //Sätter upp interrupt för timer2
-  IECSET(0) = 0x100;     //Sätter upp interrupt för timer 2
-  IPCSET(2) = 0x1f;      //Sätter prioritet och subprioritet till 7
+  IECSET(0) = 0x100;            //Sätter upp interrupt för timer 2
+  IPCSET(2) = 0x1f;             //Sätter prioritet och subprioritet till 7
   
-  T2CONSET = 0x8000;    //Startar timer 2
+  T2CONSET = 0x8000;            //Startar timer 2
 
-  enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)
+  enable_interrupt();           //Aktiverar globala interrupter (funktionen finns i labwork.S)
 
 }
 

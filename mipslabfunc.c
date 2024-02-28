@@ -385,10 +385,9 @@ void clear_screen(void)
 //Hardkodad highscore ska konfigureras senare
 void show_highscore(void)
 {
-  char h[] = "---HIGHSCORES---";  // verkar fungera
   while(1)
   {
-    display_string(0, h);
+    display_string(0, "---HIGHSCORES---");
     display_string(1, "1: 100");
     display_string(2, "2: 90");
     display_string(3, "3: 80");
@@ -403,7 +402,6 @@ void show_highscore(void)
   }
 }
 
- 
 /*Funktion för att rita en pixel på skärmen från vårt 2D kordinatsystem 
 till arrayen som skärmen använder.*/
 void draw_pixel(int x, int y, uint8_t* map, int value) 
