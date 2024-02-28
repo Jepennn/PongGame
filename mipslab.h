@@ -74,7 +74,7 @@ void credentials(void);
 void game_over(void);
 void labinit(void);
 void reset_game(void);
-void gameplay(void);
+void game_play(void);
 
 
 
