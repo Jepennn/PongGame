@@ -544,6 +544,7 @@ void reset_game(void)
   ball1.x_speed = 1;
   ball1.y_speed = 1;
 
+  //Nollställer poängen
   points = 0;
   PORTE = 0;
 }
