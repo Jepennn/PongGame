@@ -40,6 +40,8 @@ extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
 extern uint8_t single_map[512];
 extern const uint8_t const clr_screen[512];
+
+extern const uint8_t const PONG_GAME[640];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
 
@@ -52,9 +54,11 @@ extern char place3[10];
    Note: Since we declare these functions here,
    students must define their functions with the exact types
    specified in the laboratory instructions. */
+
 /* Written as part of asm lab: delay, time2string */
 void delay(int);
 void time2string( char *, int );
+
 /* Written as part of i/o lab: getbtns, getsw, enable_interrupt */
 int getbtns(void);
 int getsw(void);
@@ -64,13 +68,19 @@ void enable_interrupt(void);
 
 //Funktioner bygggda för att visa menyer
 int show_menu(void);
-void clear_screen(void);
-void show_game_over(void);
+void clear_screen(void);;
+void show_highscore(void);
+void credentials(void);
+void game_over(void);
+void labinit(void);
+void reset_game(void);
+void gameplay(void);
+
 
 
 /*Objekt som används i spelet (Bollen, racketen och kartan)
   skapar ett en typedef struct för att bara behöva använda 
-  bracket och ball*/
+  bracket och ball när ett objekt initsieras*/
 typedef struct
 {
   int x;
@@ -86,3 +96,5 @@ typedef struct
   int y_speed;
 } ball;
 
+extern bracket my_bracket;
+extern ball ball1;

@@ -4,6 +4,7 @@
 
    For copyright and licensing, see file COPYING */
 
+#include <stdio.h>
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
@@ -323,13 +324,14 @@ char * itoaconv( int num )
   return( &itoa_buffer[ i + 1 ] );
 }
 
+
 int show_menu(void)
 {
   //Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
     display_string(0, "			PONG-GAME!		");
     display_string(1, "1.Singleplayer");
     display_string(2, "2.Highscore");
-    display_string(3, "3.CREDITS");
+    display_string(3, "3.Credentials");
     display_update();
     while(1)
     {
@@ -350,6 +352,25 @@ int show_menu(void)
     }
 }
 
+//Visar skaparna av spelet
+void credentials(void){
+  display_string(0, "--CREDENTIALS--");
+  display_string(1, "");
+  display_string(2, "Jesper Sandberg");
+  display_string(3, "Andia Mir");
+  display_update();
+
+  //Tryck på knapp 4 för att gå tillbaka till menyn
+  while(1)
+  {
+    int choice = getbtns();
+    if(choice == 8)
+    {
+      return;
+    }
+  }
+}
+
 //Rensar skärmen tom för att göra den redo at visa en ny bild.
 void clear_screen(void)
 {
@@ -364,13 +385,21 @@ void clear_screen(void)
 //Hardkodad highscore ska konfigureras senare
 void show_highscore(void)
 {
-  char h[] = "HIGHSCORES";  // verkar fungera
-  while(1){
-  display_string(0, h);
-  display_string(1, "1: 100");
-  display_string(2, "2: 90");
-  display_string(3, "3: 80");
-  display_update();
+  char h[] = "---HIGHSCORES---";  // verkar fungera
+  while(1)
+  {
+    display_string(0, h);
+    display_string(1, "1: 100");
+    display_string(2, "2: 90");
+    display_string(3, "3: 80");
+    display_update();
+
+    //Tryck på knapp 4 för att gå tillbaka till menyn
+    int choice = getbtns();
+    if(choice == 8)
+    {
+      return;
+    }
   }
 }
 
@@ -402,6 +431,15 @@ void draw_pixel(int x, int y, uint8_t* map, int value)
   {
     draw_pixel(br.x, br.y + i, map, 1);
   }
+  }
+
+  void clear_bracket(bracket br, uint8_t* map)
+  {
+    int i;
+    for(i = 0; i < br.y_height; i++)
+    {
+      draw_pixel(br.x, br.y + i, map, 0);
+    }
   }
 
 
@@ -445,8 +483,9 @@ void draw_ball(ball b, uint8_t* map)
 //Flytta bollen på skärmen
 void move_ball(ball *b, uint8_t* map)
 {
-  static int counter = 0;    /*Räknare för att flytta bollen långsammare*/
-  static int points = 0;     /*Räknare för poäng*/
+  static int counter = 0;    //Räknare för att flytta bollen långsammare
+  static int points = 0;     //Räknare för poäng
+  char score[10];        //String som vår omvandling av points placeras i
 
   if (counter == 0) {
 
@@ -460,12 +499,7 @@ void move_ball(ball *b, uint8_t* map)
     //Kontrollera om bracket missar bollen
     if(b->x == 0)
     {
-      
-      clear_screen();
-      display_string(1, "    GAME OVER  ");
-      display_string(3, "Score: 10" );
-      display_update();
-      delay(1000000);
+      game_over();
     }
 
     // Kontrollera kollision med kanterna
@@ -482,13 +516,11 @@ void move_ball(ball *b, uint8_t* map)
     // Rita bollen på sin nya position
     draw_pixel(b->x, b->y, map, 1);
 
-    counter = 15; // Bollen kommer att flyttas en gång var 10:e gång move_ball kallas
+    counter = 10; // Bollen kommer att flyttas en gång var 15:e gång move_ball kallas
   } else {
     counter--;
   }
 }
-
-
 
 
 /*Kontrollera om en pixel är tänd eller släkt kan användas 
@@ -503,9 +535,62 @@ int is_pixel_on(int x, int y, uint8_t map[])
     return 1;
   else
     return 0;
-
 }
 
+
+//Funktion för game over och börja spela om
+void game_over(void)
+{
+  clear_screen();
+  display_string(1, "    GAME OVER  ");
+  display_string(3, "Score: 10" );
+  display_update();
+  delay(4000);
+  reset_game();
+  gameplay();
+}
+
+
+//Funktionen för att nollställa spelet.
+void reset_game(void) 
+{
+  clear_bracket(my_bracket, single_map);
+
+  my_bracket.x = 1;
+  my_bracket.y = 12;
+  my_bracket.y_height = 8;
+
+  ball1.x = 74;
+  ball1.y = 16;
+  ball1.x_speed = 1;
+  ball1.y_speed = 1;
+}
+
+
+void gameplay(void)
+{
+	int val = show_menu();
+
+	while(1)
+	{
+		switch (val)
+		{
+		case 1: 						//Play game
+			labwork();		
+			break;
+		case 2:							//show highscore
+			clear_screen();
+			show_highscore();
+			val = show_menu();			//Går tillbaka till menyn igen							
+			break;
+		case 3:							//show credentials	
+			clear_screen();
+			credentials();				
+			val = show_menu();			//Går tillbaka till menyn igen
+			break;
+		}
+	}
+}
 
   
 

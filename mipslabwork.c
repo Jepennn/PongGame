@@ -14,11 +14,10 @@
 #include "pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
-bracket my_bracket = {1, 12, 8}; // x-position, y-position, height
-ball ball1 = {74, 16, 1, 1};       // x-position, y-position, x-velocity, y-velocity
 
-// Skapa en instans av bracket
-int mytime = 0x5957;
+// Skapa en instans av bracket och ball
+ball ball1 = {74, 16, 1, 1};        // x-position, y-position, x-velocity, y-velocity
+bracket my_bracket = {1, 12, 8};    // x-position, y-position, height
 int countled = 0;
 
 
@@ -44,22 +43,22 @@ void user_isr( void )
   }
 }
 
-/* Project initialization goes here */
+/*Initialisera allt som behövs för spelet PONG nedan*/
 void proj_init( void )
 {
   //Sätter upp switchar och knappar till input
   TRISDSET = 0xf00;
-
   TRISFSET = 0x2; 
   TRISDSET = 0xe0;
 
-
-  // Initialisera spelet här...
-
   //Initierar displayen
-  display_init();  
+  display_init(); 
 
-  //Sätter upp min timer, prescaler 256 (31250 cykler), tid 0.1s, 
+  //Visa PONG_GAME png i 10s
+  display_image(0, PONG_GAME);
+	delay(6000); 
+
+  //Sätter upp min timer, prescaler 256 (15625 cykler), tid 0.05s, 
   T2CONCLR = 0x0;       //Resetar timer 2
   T2CON = 0x70;         //Prescaler 1:256
   TMR2 = 0x0;           //Nollställer räknaren
@@ -72,6 +71,7 @@ void proj_init( void )
   T2CONSET = 0x8000;    //Startar timer 2
 
   enable_interrupt();   //Aktiverar globala interrupter (funktionen finns i labwork.S)
+
 }
 
 

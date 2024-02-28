@@ -59,25 +59,10 @@ int main(void) {
 	char place2[10];
 	char place3[10];
 
-	/*Initialiserar allt som behövs för projektet */
+	//Initialiserar allt som behövs för spelet
 	proj_init(); 
 
-	int val = show_menu();
-	while(1)
-	{
-		switch (val)
-		{
-		case 1: 					//Play game
-			labwork(); 		
-			break;
-		case 2:						//show highscore
-			clear_screen();
-			show_highscore();								
-			break;
-		case 3:
-			labwork(); 				//Show credits
-
-		}
-	}
+	//Startar spelet
+	gameplay();	
 	return 0;
 }
