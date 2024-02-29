@@ -544,7 +544,7 @@ void game_over(void)
 
   if(winner == 1)
   {
-    display_string(1, "  Left player win");
+    display_string(1, " Left player win");
     display_update();
   }
 
@@ -584,8 +584,6 @@ void reset_game(void)
   PORTE = 0;
   winner = 0;         //Nollställer vinnaren
   velocity_b = 20;    //återställer hastigheten på bollen till starthastigheten
-
-
 }
 
 
