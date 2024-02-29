@@ -17,7 +17,7 @@
 
 // Skapa en instans av bracket och ball
 ball ball1 = {74, 16, 1, 1};        // x-position, y-position, x-velocity, y-velocity
-bracket my_bracket = {1, 12, 8};    // x-position, y-position, height
+bracket my_bracket = {1, 12, 6};    // x-position, y-position, height
 
 //Globala variabler för LED
 int countled = 0;

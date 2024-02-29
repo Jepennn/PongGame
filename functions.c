@@ -358,9 +358,9 @@ void show_highscore(void)
   while(1)
   {
     display_string(0, "---HIGHSCORES---");
-    display_string(1, place1_pointer);
-    display_string(2, place2_pointer);
-    display_string(3, place3_pointer);
+    display_string(1, "1: 100");
+    display_string(2, "2: 50");
+    display_string(3, "3: 20");
     display_update();
 
     //Tryck på knapp 4 för att gå tillbaka till menyn
@@ -521,7 +521,6 @@ void game_over(void)
   display_string(3, score_pointer);
   display_update();
   delay(4000);
-  check_if_highscore();
   reset_game();
   game_play();
 }
@@ -555,10 +554,10 @@ void game_play(void)
 	{
 		switch (val)
 		{
-		case 1: 						  //Play game
+		case 1: 						      //Play game
 			labwork();		
 			break;
-		case 2:							    //show highscore
+		case 2:							      //show highscore
 			clear_screen();
 			show_highscore();
 			val = show_menu();			//Går tillbaka till menyn igen							
@@ -573,43 +572,55 @@ void game_play(void)
 }
 
 
-check_if_highscore(void)
+/*check_if_highscore(void)
 {
   if(points > p1)
   {
     p3 = p2;
     p2 = p1;
-    place3_pointer = itoaconv(p3);
-    place2_pointer = itoaconv(p2);
-
     p1 = points;
+
+    place3_pointer = itoaconv(p2);
+    place2_pointer = itoaconv(p1);
     place1_pointer = itoaconv(points);
 
     clear_screen();
     display_string(1, " NEW HIGHSCORE!");
+    display_update();
+    delay(4000);
   }
-  else if(points > p2)
+  else if(points > p2 && points < p1)
   {
     p3 = p2;
-    place3_pointer = itoaconv(p3);
-
     p2 = points;
+
+    place3_pointer = itoaconv(p2);
     place2_pointer = itoaconv(points);
 
     clear_screen();
     display_string(1, "Second best, not bad!");
+    display_update();
+    delay(4000);
   }
-  else if(points > p3)
+  else if(points > p3 && points < p2)
   {
     p3 = points;
     place3_pointer = itoaconv(points);
 
     clear_screen();
     display_string(1, "Third best, keep going!");
+    display_update();
+    delay(4000);
   }
-
-
-}
+  else
+  {
+    clear_screen();
+    display_string(1, "Better luck");
+    display_string(2, "next time!");
+    display_update();
+    delay(4000);
+  }
+}*/
 
 
 

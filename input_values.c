@@ -20,3 +20,6 @@ int getbtns(void)
     btns = btns | btn1;                          //Lägger ihop värdet från BTN1 och BTN2-4                                             
     return btns;                                 //Returnerar värdet
 }
+
+
+
