@@ -47,20 +47,12 @@ extern char textbuffer[4][16];
 
 //Global variables
 extern int countled;          //Räknare för LED
-extern int points;            //Räknare för poäng
-extern char score[5];         //String som vår omvandling av points placeras i
+extern int leds;            //Räknare för poäng
+extern char score[5];         //String som vår omvandling av leds placeras i
 extern char *score_pointer;   //Pekare till score
 
-extern int p1;                //Highscore 1
-extern int p2;                //Highscore 2
-extern int p3;                //Highscore 3
-
-extern char place1[5];	
-extern char place2[5];
-extern char place3[5];
-extern char *place1_pointer;
-extern char *place2_pointer;
-extern char *place3_pointer;
+extern int winner;
+extern int velocity_b;
 
 
 /* Declare functions written by students.
@@ -106,4 +98,5 @@ typedef struct
 } ball;
 
 extern bracket my_bracket;
+extern bracket my_bracket2;       //##
 extern ball ball1;

@@ -299,9 +299,8 @@ char * itoaconv( int num )
 int show_menu(void)
 {
     display_string(0, "			PONG-GAME!		");
-    display_string(1, "1.Singleplayer");
-    display_string(2, "2.Highscore");
-    display_string(3, "3.Credentials");
+    display_string(2, "1.Play-game");
+    display_string(3, "2.Credentials");
     display_update();
     while(1)
     {
@@ -315,15 +314,12 @@ int show_menu(void)
       {
         return 2;
       }
-      else if(choice == 4)
-      {
-        return 3;
-      }
     }
 }
 
 //Visar skaparna av spelet
-void credentials(void){
+void credentials(void)
+{
   display_string(0, "--CREDENTIALS--");
   display_string(1, "");
   display_string(2, "Jesper Sandberg");
@@ -352,25 +348,6 @@ void clear_screen(void)
   display_update();
 }
 
-//Hardkodad highscore ska konfigureras senare
-void show_highscore(void)
-{
-  while(1)
-  {
-    display_string(0, "---HIGHSCORES---");
-    display_string(1, "1: 100");
-    display_string(2, "2: 50");
-    display_string(3, "3: 20");
-    display_update();
-
-    //Tryck på knapp 4 för att gå tillbaka till menyn
-    int choice = getbtns();
-    if(choice == 8)
-    {
-      return;
-    }
-  }
-}
 
 /*Funktion för att rita en pixel på skärmen från vårt 2D kordinatsystem 
 till arrayen som skärmen använder.*/
@@ -391,6 +368,7 @@ void draw_pixel(int x, int y, uint8_t* map, int value)
 
 /*Funktioner för att hantera bracketen*/
 
+
 //Rita ut bracketen på skärmen
  void draw_bracket(bracket br, uint8_t* map)
   {
@@ -401,6 +379,7 @@ void draw_pixel(int x, int y, uint8_t* map, int value)
   }
   }
 
+//Anvvänds för att rita bort den gamla bracket när man börjar spela efte game_over.
   void clear_bracket(bracket br, uint8_t* map)
   {
     int i;
@@ -411,9 +390,23 @@ void draw_pixel(int x, int y, uint8_t* map, int value)
   }
 
 
-void move_bracket(bracket *br, int direction, uint8_t* map)
+void move_bracket(bracket *br, int d, uint8_t* map)
 {
-  if(direction == 4) //Flytta bracketen nedåt(BTN3)
+
+  if(d == 1) //Flytta bracketen uppåt(BTN1)
+  {
+    if(br->y > 0)
+    {
+      // Släck den nedersta pixeln
+      draw_pixel(br->x, br->y + br->y_height - 1, map, 0);
+      // Tänd den översta pixeln
+      draw_pixel(br->x, br->y - 1, map, 1);
+      // Uppdatera y-koordinaten
+      br->y -= 1;
+    }
+  }
+
+  if(d == 2) //Flytta bracketen nedåt(BTN2)
   {
     if((br->y + br->y_height) < 32)
     {
@@ -425,7 +418,23 @@ void move_bracket(bracket *br, int direction, uint8_t* map)
       br->y += 1;
     }
   }
-  else if(direction == 8) //Flytta bracketen uppåt(BTN4)
+
+
+  if(d == 4) //Flytta bracketen nedåt(BTN3)
+  {
+    if((br->y + br->y_height) < 32)
+    {
+      // Släck den översta pixeln
+      draw_pixel(br->x, br->y, map, 0);
+      // Tänd den nedersta pixeln
+      draw_pixel(br->x, br->y + br->y_height, map, 1);
+      // Uppdatera y-koordinaten
+      br->y += 1;
+    }
+  }
+
+
+  if(d == 8) //Flytta bracketen uppåt(BTN4)
   {
     if(br->y > 0)
     {
@@ -451,9 +460,17 @@ void draw_ball(ball b, uint8_t* map)
 //Flytta bollen på skärmen
 void move_ball(ball *b, uint8_t* map)
 {
-  static int counter = 0;     //Räknare för att flytta bollen långsammare
-  //static int points = 0;     //Räknare för poäng
-  //char score[5];            //String som vår omvandling av points placeras i
+  static int counter = 0;      //Räknare för att flytta bollen långsammare
+  
+  if(leds == 10)
+  {
+    velocity_b = 13;
+  }
+
+  if(leds == 20)
+  {
+    velocity_b = 10;
+  }
 
   if (counter == 0) {
 
@@ -464,24 +481,31 @@ void move_ball(ball *b, uint8_t* map)
     b->x += b->x_speed;               //Flytta bollen i x-led
     b->y += b->y_speed;               //Flytta bollen i y-led
 
-    //Kontrollera om bracket missar bollen
+    //Kontrollera om någon spelare har vunnit
     if(b->x == 0)
     {
+      winner = 2;
       game_over();
     }
 
-    // Kontrollera kollision med kanterna
-    if(is_pixel_on(b->x, b->y, map) || b->x >= 127)
+    if(b->x == 127)
+    {
+      winner = 1;
+      game_over();
+    }
+
+    //Kontrollera kollision med brackets
+    if(is_pixel_on(b->x, b->y, map)) //|| b->x >= 127)
     {
       if(is_pixel_on(b->x, b->y, map))
       {
-        points++;                       //Lägg till 10 poäng om bollen kolliderar med bracketen
-        //countled = 1;                   //Sätt countled till 1 för att lysa upp LED
-        PORTE = points;                 //Visa poängen på LED
+        leds++;                       //Lägg till 1 på leds om bollen kolliderar med bracketen
+        PORTE = leds;                 //Visa poängen på LED
       } 
-
       b->x_speed *= -1;                 //Byt riktning i x-led om bollen kolliderar med kanterna. (x_speed = -x_speed)
     }
+
+    //Kontrollerar kollision med tak och golv 
     if(b->y <= 0 || b->y >= 31)
     {
       b->y_speed *= -1;                 //Byt riktning i y-led om bollen kolliderar med kanterna. (y_speed = -y_speed)
@@ -490,7 +514,8 @@ void move_ball(ball *b, uint8_t* map)
     // Rita bollen på sin nya position
     draw_pixel(b->x, b->y, map, 1);
 
-    counter = 10; // Bollen kommer att flyttas en gång var 15:e gång move_ball kallas
+    counter = velocity_b;             // Bollen kommer att flyttas olika snabbt beroende på velocity_b
+
   } else {
     counter--;
   }
@@ -516,24 +541,38 @@ int is_pixel_on(int x, int y, uint8_t map[])
 void game_over(void)
 {
   clear_screen();
-  score_pointer = itoaconv(points);
-  display_string(1, "    GAME OVER  ");
-  display_string(3, score_pointer);
-  display_update();
-  delay(4000);
+
+  if(winner == 1)
+  {
+    display_string(1, "  Left player win");
+    display_update();
+  }
+
+  if(winner == 2)
+  {
+    display_string(1, "Right player win");
+    display_update();
+  }
+
+  delay(5000);
   reset_game();
   game_play();
 }
-
 
 //Funktionen för att nollställa spelet.
 void reset_game(void) 
 {
   clear_bracket(my_bracket, single_map);
+  clear_bracket(my_bracket2, single_map);
+  clear_screen();
 
   my_bracket.x = 1;
   my_bracket.y = 12;
-  my_bracket.y_height = 8;
+  my_bracket.y_height = 6;
+
+  my_bracket2.x = 126;
+  my_bracket2.y = 12;
+  my_bracket2.y_height = 6;
 
   ball1.x = 74;
   ball1.y = 16;
@@ -541,8 +580,12 @@ void reset_game(void)
   ball1.y_speed = 1;
 
   //Nollställer poängen
-  points = 0;
+  leds = 0;
   PORTE = 0;
+  winner = 0;         //Nollställer vinnaren
+  velocity_b = 20;    //återställer hastigheten på bollen till starthastigheten
+
+
 }
 
 
@@ -555,14 +598,9 @@ void game_play(void)
 		switch (val)
 		{
 		case 1: 						      //Play game
-			labwork();		
+      labwork();		
 			break;
-		case 2:							      //show highscore
-			clear_screen();
-			show_highscore();
-			val = show_menu();			//Går tillbaka till menyn igen							
-			break;
-		case 3:							      //show credentials	
+		case 2:							      //show credentials	
 			clear_screen();
 			credentials();				
 			val = show_menu();			//Går tillbaka till menyn igen
@@ -571,56 +609,6 @@ void game_play(void)
 	}
 }
 
-
-/*check_if_highscore(void)
-{
-  if(points > p1)
-  {
-    p3 = p2;
-    p2 = p1;
-    p1 = points;
-
-    place3_pointer = itoaconv(p2);
-    place2_pointer = itoaconv(p1);
-    place1_pointer = itoaconv(points);
-
-    clear_screen();
-    display_string(1, " NEW HIGHSCORE!");
-    display_update();
-    delay(4000);
-  }
-  else if(points > p2 && points < p1)
-  {
-    p3 = p2;
-    p2 = points;
-
-    place3_pointer = itoaconv(p2);
-    place2_pointer = itoaconv(points);
-
-    clear_screen();
-    display_string(1, "Second best, not bad!");
-    display_update();
-    delay(4000);
-  }
-  else if(points > p3 && points < p2)
-  {
-    p3 = points;
-    place3_pointer = itoaconv(points);
-
-    clear_screen();
-    display_string(1, "Third best, keep going!");
-    display_update();
-    delay(4000);
-  }
-  else
-  {
-    clear_screen();
-    display_string(1, "Better luck");
-    display_string(2, "next time!");
-    display_update();
-    delay(4000);
-  }
-}*/
 
 
 

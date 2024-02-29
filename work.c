@@ -16,28 +16,21 @@
 
 
 // Skapa en instans av bracket och ball
-ball ball1 = {74, 16, 1, 1};        // x-position, y-position, x-velocity, y-velocity
-bracket my_bracket = {1, 12, 6};    // x-position, y-position, height
+ball ball1 = {74, 16, 1, 1};          // x-position, y-position, x-velocity, y-velocity
+bracket my_bracket = {1, 12, 6};      // x-position, y-position, height
+bracket my_bracket2 = {126, 12, 6};   // x-position, y-position, height
 
 //Globala variabler för LED
 int countled = 0;
 
-//Globala variabler för pågående spel
-int points = 0;                         //Räknare för poäng
-char score[5];                          //String som vår omvandling av points placeras i
-char *score_pointer = score;            //Pekare till score
+//Variabel som bestämmer vinnare
+int winner;
 
-//Globala variabler för highscore
-int p1 = 0;
-int p2 = 0;
-int p3 = 0;
-char place1[5];	
-char place2[5];
-char place3[5];
+//Räknare för LED
+int leds = 0;                         
 
-char *place1_pointer = place1;
-char *place2_pointer = place2;
-char *place3_pointer = place3;
+//Start hastigheten på bollen som kommer att öka under spelets gång
+int velocity_b = 20;          
 
 
 /* Interrupt Service Routine */ 
@@ -45,9 +38,14 @@ void user_isr( void )
 {
   if(IFS(0) & 0x100)  //Kontrollerar om timer flaggan är satt. Ett icke nollvärde anses vara sant i C.
   {
-    IFSCLR(0) = 0x100;          //Nollställer timer flaggan
-    int direction = getbtns();
-    move_bracket(&my_bracket, direction, single_map);
+    IFSCLR(0) = 0x100;                        //Nollställer timer flaggan
+
+    int direction_R = (getbtns() & 0x3);      //styr den högra bracketen med
+    int direction_L = (getbtns() & 0xc);      //## 
+
+    move_bracket(&my_bracket, direction_L, single_map);
+    move_bracket(&my_bracket2, direction_R, single_map);    //##
+
   }
 }
 
@@ -90,6 +88,7 @@ void proj_init( void )
 void labwork( void )
 {
   draw_bracket(my_bracket, single_map);
+  draw_bracket(my_bracket2, single_map);   
   draw_ball(ball1, single_map);
   move_ball(&ball1, single_map);
   display_image(0, single_map);
