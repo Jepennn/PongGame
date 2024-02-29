@@ -292,9 +292,12 @@ char * itoaconv( int num )
 }
 
 
+/*#############################################################################################*/
+
+
+//Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
 int show_menu(void)
 {
-  //Meny funktionen som visar menyn och låter användaren välja om den ska se high score eller spela spelet.
     display_string(0, "			PONG-GAME!		");
     display_string(1, "1.Singleplayer");
     display_string(2, "2.Highscore");
@@ -327,7 +330,7 @@ void credentials(void){
   display_string(3, "Andia Mir");
   display_update();
 
-  //Tryck på knapp 4 för att gå tillbaka till menyn
+  //Knapp 4 för att gå tillbaka till menyn
   while(1)
   {
     int choice = getbtns();
@@ -355,9 +358,9 @@ void show_highscore(void)
   while(1)
   {
     display_string(0, "---HIGHSCORES---");
-    display_string(1, "1: 100");
-    display_string(2, "2: 90");
-    display_string(3, "3: 80");
+    display_string(1, place1_pointer);
+    display_string(2, place2_pointer);
+    display_string(3, place3_pointer);
     display_update();
 
     //Tryck på knapp 4 för att gå tillbaka till menyn
@@ -445,13 +448,6 @@ void draw_ball(ball b, uint8_t* map)
   draw_pixel(b.x, b.y, map, 1);
 }
 
-/*#######################################################################################*/
-//Här kommeer lite globala variabler som används i spelet
-
-int points = 0;                         //Räknare för poäng
-char score[5];                          //String som vår omvandling av points placeras i
-char *score_pointer = score;            //Pekare till score
-
 //Flytta bollen på skärmen
 void move_ball(ball *b, uint8_t* map)
 {
@@ -525,6 +521,7 @@ void game_over(void)
   display_string(3, score_pointer);
   display_update();
   delay(4000);
+  check_if_highscore();
   reset_game();
   game_play();
 }
@@ -558,15 +555,15 @@ void game_play(void)
 	{
 		switch (val)
 		{
-		case 1: 						//Play game
+		case 1: 						  //Play game
 			labwork();		
 			break;
-		case 2:							//show highscore
+		case 2:							    //show highscore
 			clear_screen();
 			show_highscore();
 			val = show_menu();			//Går tillbaka till menyn igen							
 			break;
-		case 3:							//show credentials	
+		case 3:							      //show credentials	
 			clear_screen();
 			credentials();				
 			val = show_menu();			//Går tillbaka till menyn igen
@@ -574,6 +571,52 @@ void game_play(void)
 		}
 	}
 }
+
+
+check_if_highscore(void)
+{
+  if(points > p1)
+  {
+    p3 = p2;
+    p2 = p1;
+    place3_pointer = itoaconv(p3);
+    place2_pointer = itoaconv(p2);
+
+    p1 = points;
+    place1_pointer = itoaconv(points);
+
+    clear_screen();
+    display_string(1, " NEW HIGHSCORE!");
+  }
+  else if(points > p2)
+  {
+    p3 = p2;
+    place3_pointer = itoaconv(p3);
+
+    p2 = points;
+    place2_pointer = itoaconv(points);
+
+    clear_screen();
+    display_string(1, "Second best, not bad!");
+  }
+  else if(points > p3)
+  {
+    p3 = points;
+    place3_pointer = itoaconv(points);
+
+    clear_screen();
+    display_string(1, "Third best, keep going!");
+  }
+
+
+}
+
+
+
+
+
+
+
 
 
 

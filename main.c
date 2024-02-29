@@ -54,16 +54,13 @@ int main(void) {
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
 
-	//Highscore list
-	char place1[10];	
-	char place2[10];
-	char place3[10];
+
 
 	//Initialiserar allt som behövs för spelet
 	proj_init(); 
 
 	//Startar spelet
 	game_play();
-		
+
 	return 0;
 }

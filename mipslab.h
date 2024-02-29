@@ -45,10 +45,23 @@ extern const uint8_t const PONG_GAME[640];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
 
-//Arrays for highscore
-extern char place1[10];	
-extern char place2[10];
-extern char place3[10];
+//Global variables
+extern int countled;          //Räknare för LED
+extern int points;            //Räknare för poäng
+extern char score[5];         //String som vår omvandling av points placeras i
+extern char *score_pointer;   //Pekare till score
+
+extern int p1;                //Highscore 1
+extern int p2;                //Highscore 2
+extern int p3;                //Highscore 3
+
+extern char place1[5];	
+extern char place2[5];
+extern char place3[5];
+extern char *place1_pointer;
+extern char *place2_pointer;
+extern char *place3_pointer;
+
 
 /* Declare functions written by students.
    Note: Since we declare these functions here,

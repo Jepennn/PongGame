@@ -18,7 +18,26 @@
 // Skapa en instans av bracket och ball
 ball ball1 = {74, 16, 1, 1};        // x-position, y-position, x-velocity, y-velocity
 bracket my_bracket = {1, 12, 8};    // x-position, y-position, height
+
+//Globala variabler för LED
 int countled = 0;
+
+//Globala variabler för pågående spel
+int points = 0;                         //Räknare för poäng
+char score[5];                          //String som vår omvandling av points placeras i
+char *score_pointer = score;            //Pekare till score
+
+//Globala variabler för highscore
+int p1 = 0;
+int p2 = 0;
+int p3 = 0;
+char place1[5];	
+char place2[5];
+char place3[5];
+
+char *place1_pointer = place1;
+char *place2_pointer = place2;
+char *place3_pointer = place3;
 
 
 /* Interrupt Service Routine */ 
