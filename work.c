@@ -41,10 +41,10 @@ void user_isr( void )
     IFSCLR(0) = 0x100;                        //Nollställer timer flaggan
 
     int direction_R = (getbtns() & 0x3);      //styr den högra bracketen med
-    int direction_L = (getbtns() & 0xc);      //## 
+    int direction_L = (getbtns() & 0xc);      
 
     move_bracket(&my_bracket, direction_L, single_map);
-    move_bracket(&my_bracket2, direction_R, single_map);    //##
+    move_bracket(&my_bracket2, direction_R, single_map);    
 
   }
 }
@@ -82,7 +82,6 @@ void proj_init( void )
   enable_interrupt();           //Aktiverar globala interrupter (funktionen finns i labwork.S)
 
 }
-
 
 /* Gameplaying function*/
 void labwork( void )

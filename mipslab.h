@@ -98,5 +98,5 @@ typedef struct
 } ball;
 
 extern bracket my_bracket;
-extern bracket my_bracket2;       //##
+extern bracket my_bracket2;       
 extern ball ball1;

@@ -353,9 +353,9 @@ void clear_screen(void)
 till arrayen som skärmen använder.*/
 void draw_pixel(int x, int y, uint8_t* map, int value) 
 {
-  int page = y / 8;
-  int pixel = y % 8;
-  int index = page * 128 + x;
+  int page = y / 8;                   //Hittar vilken page vi befinner oss på i displayen.
+  int pixel = y % 8;                  //Hittar vilken pixel vi befinner oss på i elementet
+  int index = page * 128 + x;         //Hittar vilket element vi befinner oss på i arrayen
   if(value == 1)
   {
     map[index] |= 1 << pixel;
@@ -375,7 +375,7 @@ void draw_pixel(int x, int y, uint8_t* map, int value)
   int i;
   for(i = 0; i < br.y_height; i++)
   {
-    draw_pixel(br.x, br.y + i, map, 1);
+    draw_pixel(br.x, br.y + i, map, 1);                
   }
   }
 
@@ -399,8 +399,10 @@ void move_bracket(bracket *br, int d, uint8_t* map)
     {
       // Släck den nedersta pixeln
       draw_pixel(br->x, br->y + br->y_height - 1, map, 0);
+
       // Tänd den översta pixeln
       draw_pixel(br->x, br->y - 1, map, 1);
+
       // Uppdatera y-koordinaten
       br->y -= 1;
     }
@@ -412,8 +414,10 @@ void move_bracket(bracket *br, int d, uint8_t* map)
     {
       // Släck den översta pixeln
       draw_pixel(br->x, br->y, map, 0);
+
       // Tänd den nedersta pixeln
       draw_pixel(br->x, br->y + br->y_height, map, 1);
+
       // Uppdatera y-koordinaten
       br->y += 1;
     }
@@ -495,13 +499,11 @@ void move_ball(ball *b, uint8_t* map)
     }
 
     //Kontrollera kollision med brackets
-    if(is_pixel_on(b->x, b->y, map)) //|| b->x >= 127)
+    if(is_pixel_on(b->x, b->y, map)) 
     {
-      if(is_pixel_on(b->x, b->y, map))
-      {
-        leds++;                       //Lägg till 1 på leds om bollen kolliderar med bracketen
-        PORTE = leds;                 //Visa poängen på LED
-      } 
+      leds++;                       //Lägg till 1 på leds om bollen kolliderar med bracketen
+      PORTE = leds;                 //Visa poängen på LED
+
       b->x_speed *= -1;                 //Byt riktning i x-led om bollen kolliderar med kanterna. (x_speed = -x_speed)
     }
 
